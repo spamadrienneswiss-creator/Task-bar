@@ -136,6 +136,7 @@ $('#tStart').addEventListener('click', () => { data.settings.startWithWindows = 
 $('#t24').addEventListener('click', () => { data.settings.clock24 = !data.settings.clock24; setSwitch($('#t24'), data.settings.clock24); window.tb.set({ clock24: data.settings.clock24 }); });
 $('#seconds').addEventListener('change', (e) => window.tb.set({ showSeconds: e.target.value === 'theme' ? null : e.target.value === 'on' }));
 $('#engine').addEventListener('change', (e) => window.tb.set({ searchEngine: e.target.value }));
+$('#winStyle').addEventListener('change', (e) => window.tb.set({ winStyle: e.target.value }));
 
 function renderUpdate() {
   const u = (state && state.update) || data.update || {};
@@ -155,6 +156,7 @@ function renderAll() {
   const s = data.settings;
   setSwitch($('#tTint'), s.tint); setSwitch($('#tSuggest'), s.suggestOnWallpaper);
   setSwitch($('#tHide'), s.hideWindowsTaskbar); setSwitch($('#tStart'), s.startWithWindows); setSwitch($('#t24'), s.clock24);
+  $('#winStyle').value = s.winStyle === 'titles' ? 'titles' : 'icons';
   $('#seconds').value = s.showSeconds === null || s.showSeconds === undefined ? 'theme' : s.showSeconds ? 'on' : 'off';
   $('#engine').innerHTML = data.engines.map((e) => `<option value="${e.id}"${e.id === s.searchEngine ? ' selected' : ''}>${window.esc(e.name)}</option>`).join('');
   renderWallpaper(); renderThemes(); renderPins(); renderWeather(); renderDisplays(); renderUpdate();

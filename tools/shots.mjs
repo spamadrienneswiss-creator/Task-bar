@@ -19,15 +19,17 @@ function fakeState(theme, extra = {}) {
   return {
     version: '1.0.0', theme, tint: null, seconds: t.seconds, clock24: false, native: true,
     windows: [
-      { hwnd: 11, title: 'Weather – Google Chrome', app: 'Chrome', icon: null, active: true },
-      { hwnd: 12, title: 'Downloads', app: 'File Explorer', icon: null, active: false },
-      { hwnd: 13, title: 'notes.txt – Notepad', app: 'Notepad', icon: null, active: false }
+      { hwnd: 11, title: 'Claude', app: 'Claude', icon: ICON.claude, active: true },
+      { hwnd: 12, title: 'Friends - Discord', app: 'Discord', icon: ICON.discord, active: false },
+      { hwnd: 13, title: 'Release Task Bar v1.0.1 – Mozilla Firefox', app: 'Firefox', icon: ICON.firefox, active: false },
+      { hwnd: 14, title: 'Downloads', app: 'File Explorer', icon: ICON.explorer, active: false }
     ],
+    trayApps: [{ key: 'command deck.exe', name: 'Command Deck', icon: ICON.deck, hwnd: 20, active: false }],
+    winStyle: 'icons',
     pins: [
-      { i: 0, name: 'File Explorer', icon: null, glyph: null, running: true },
-      { i: 1, name: 'Google Chrome', icon: null, glyph: null, running: true },
-      { i: 2, name: 'Command Deck', icon: null, glyph: null, running: false },
-      { i: 3, name: 'Settings', icon: null, glyph: 'settings', running: false }
+      { i: 0, name: 'File Explorer', icon: ICON.explorer, glyph: null, running: true },
+      { i: 1, name: 'Firefox', icon: ICON.firefox, glyph: null, running: true },
+      { i: 2, name: 'Settings', icon: null, glyph: 'settings', running: false }
     ],
     weather: { temp: 64, unit: 'F', text: 'Clear', icon: 'clear', high: 71, low: 55, place: 'Los Angeles' },
     suggestion: null, update: { state: 'current' }, ...extra
@@ -54,6 +56,14 @@ const FAKE_APPS = ['Calculator', 'Camera', 'Clock', 'Command Deck', 'Discord', '
 
 const browser = await chromium.launch();
 const shots = [];
+// Stand-in app icons (colored tiles), so icon-only buttons look like the real thing.
+const iconPage = await browser.newPage();
+const ICON = await iconPage.evaluate(() => {
+  const make = (bg, fg, ch) => { const c = document.createElement('canvas'); c.width = c.height = 32; const x = c.getContext('2d');
+    x.fillStyle = bg; x.beginPath(); x.roundRect(2, 2, 28, 28, 7); x.fill(); x.fillStyle = fg; x.font = 'bold 17px sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(ch, 16, 17); return c.toDataURL('image/png'); };
+  return { explorer: make('#F4C542', '#7A5A00', '▬'), chrome: make('#4285F4', '#fff', 'G'), claude: make('#D97757', '#fff', '✳'), discord: make('#5865F2', '#fff', 'D'), firefox: make('#FF7139', '#fff', 'F'), deck: make('#10151C', '#F2A541', '◆'), notepad: make('#3AA0E0', '#fff', 'N') };
+});
+await iconPage.close();
 for (const t of THEMES) {
   if (only && only !== t.id) continue;
   const desk = t.desk;

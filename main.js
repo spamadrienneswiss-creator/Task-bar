@@ -202,6 +202,18 @@ function tintColors() {
   const c = s.tintColor || (s.wallpaper && s.wallpaper.vivid);
   return c ? color.tintFor(byId(s.theme), c) : null;
 }
+const exeBase = (exe) => String(exe || '').split(/[\\/]/).pop().toLowerCase();
+function isTrayApp(w) { return (store.get().trayApps || []).includes(exeBase(w.exe)); }
+function publicTray() {
+  const groups = new Map();
+  for (const w of windowsList) {
+    if (!isTrayApp(w)) continue;
+    const k = exeBase(w.exe);
+    if (!groups.has(k)) groups.set(k, { key: k, name: w.app, icon: iconFor(w.iconKey), hwnd: w.hwnd, active: false });
+    if (w.hwnd === lastFg) groups.get(k).active = true;
+  }
+  return [...groups.values()];
+}
 function publicState() {
   const s = store.get();
   const t = byId(s.theme);
@@ -209,7 +221,8 @@ function publicState() {
     version: app.getVersion(), theme: t.id, tint: tintColors(),
     seconds: s.showSeconds === null || s.showSeconds === undefined ? t.seconds : !!s.showSeconds,
     clock24: !!s.clock24,
-    windows: windowsList.map((w) => ({ hwnd: w.hwnd, title: w.title, app: w.app, icon: iconFor(w.iconKey), active: w.hwnd === lastFg })),
+    windows: windowsList.filter((w) => !isTrayApp(w)).map((w) => ({ hwnd: w.hwnd, title: w.title, app: w.app, icon: iconFor(w.iconKey), active: w.hwnd === lastFg })),
+    trayApps: publicTray(), winStyle: s.winStyle === 'titles' ? 'titles' : 'icons',
     pins: publicPins(), weather: weatherState, suggestion, update: updateState, native: !!w32
   };
 }
@@ -443,8 +456,24 @@ function windowMenu(hwnd) {
       : { label: `Pin ${w.app} to the bar`, click: () => { store.set({ pins: [...pins, { name: w.app, kind: 'path', value: w.exe }] }); broadcast(true); } });
     items.push({ label: `Open another ${w.app}`, click: () => shell.openPath(w.exe) }, { type: 'separator' });
   }
+  if (w.exe) items.push({ label: 'Move to the tray', click: () => setTrayApp(w.exe, true) });
   items.push({ label: 'Close window', click: () => w32 && w32.close(hwnd) });
   Menu.buildFromTemplate(items).popup({ window: bar });
+}
+function setTrayApp(exe, on) {
+  const k = exeBase(exe);
+  const list = (store.get().trayApps || []).filter((x) => x !== k);
+  if (on) list.push(k);
+  store.set({ trayApps: list }); broadcast(true);
+}
+function trayAppMenu(key) {
+  const w = windowsList.find((x) => exeBase(x.exe) === key);
+  Menu.buildFromTemplate([
+    ...(w ? [{ label: `Show ${w.app}`, click: () => { w32.activate(w.hwnd); lastFg = w.hwnd; } }] : []),
+    { label: 'Show in open windows instead', click: () => setTrayApp(key, false) },
+    { type: 'separator' },
+    ...(w ? [{ label: 'Close window', click: () => w32 && w32.close(w.hwnd) }] : [])
+  ]).popup({ window: bar });
 }
 function movePin(i, d) {
   const pins = (store.get().pins || []).slice();
@@ -577,7 +606,7 @@ function displaysInfo() {
       current: barDisplay ? d.id === barDisplay.id : false
     }));
 }
-const SETTABLE = new Set(['theme', 'tint', 'suggestOnWallpaper', 'displayId', 'hideWindowsTaskbar', 'startWithWindows', 'showSeconds', 'clock24', 'searchEngine']);
+const SETTABLE = new Set(['theme', 'tint', 'suggestOnWallpaper', 'displayId', 'hideWindowsTaskbar', 'startWithWindows', 'showSeconds', 'clock24', 'searchEngine', 'winStyle']);
 function applySettings(patch) {
   const clean = {};
   for (const [k, v] of Object.entries(patch || {})) if (SETTABLE.has(k)) clean[k] = v;
@@ -630,6 +659,7 @@ function registerIpc() {
     setTimeout(pollWindows, 120);
   });
   ipcMain.on('win:menu', (_e, hwnd) => windowMenu(num(hwnd)));
+  ipcMain.on('trayapp:menu', (_e, key) => trayAppMenu(String(key || '').toLowerCase()));
   ipcMain.on('win:close', (_e, hwnd) => { hwnd = num(hwnd); if (w32 && windowsList.some((w) => w.hwnd === hwnd)) w32.close(hwnd); });
   ipcMain.on('pin:launch', (_e, i) => launchPin(num(i)));
   ipcMain.on('pin:menu', (_e, i) => pinMenu(num(i)));
@@ -664,7 +694,7 @@ function registerIpc() {
   ipcMain.handle('settings:get', () => {
     const s = store.get();
     return {
-      settings: { theme: s.theme, tint: s.tint, suggestOnWallpaper: s.suggestOnWallpaper, displayId: s.displayId, hideWindowsTaskbar: s.hideWindowsTaskbar, startWithWindows: s.startWithWindows, showSeconds: s.showSeconds, clock24: s.clock24, searchEngine: s.searchEngine, weather: s.weather },
+      settings: { winStyle: s.winStyle, trayApps: s.trayApps || [], theme: s.theme, tint: s.tint, suggestOnWallpaper: s.suggestOnWallpaper, displayId: s.displayId, hideWindowsTaskbar: s.hideWindowsTaskbar, startWithWindows: s.startWithWindows, showSeconds: s.showSeconds, clock24: s.clock24, searchEngine: s.searchEngine, weather: s.weather },
       pins: (s.pins || []).map((p, i) => ({ i, name: p.name, kind: p.kind, value: p.value, icon: iconFor(pinKey(p)) })),
       displays: displaysInfo(), themes: THEMES, engines: Object.entries(search.ENGINES).map(([id, e]) => ({ id, name: e.name })),
       wallpaper: wallpaperInfo(), version: app.getVersion(), update: updateState, native: !!w32

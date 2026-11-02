@@ -223,3 +223,25 @@ svg { display: block; flex: none; }
 /* Narrow monitors: drop extras before the windows get crowded */
 @media (max-width: 1500px) { .search { width: 210px; } .stencil, .trim::before { display: none; } }
 @media (max-width: 1200px) { .weather .w-text .w-sub, .clock-date { display: none; } .search { width: 170px; } }
+
+/* ---- Tray apps (Command Deck and friends): small icons beside the tray buttons ---- */
+.tray-apps { flex: none; display: flex; align-items: center; gap: 2px; padding: 0 4px; border-left: 1px solid var(--line); }
+.tray-apps[hidden] { display: none; }
+.tray-app { position: relative; width: 34px; height: 42px; display: grid; place-items: center; border-radius: 6px; }
+.tray-app:hover { background: var(--raised); }
+.tray-app img { width: 18px; height: 18px; object-fit: contain; }
+.tray-app .mono-icon { width: 18px; height: 18px; font-size: 9px; }
+.tray-app.active::after { content: ''; position: absolute; bottom: 4px; left: 50%; width: 10px; height: 2px; margin-left: -5px; background: var(--accent); }
+[data-theme="moonbase"] .tray-app { height: 36px; }
+
+/* ---- Open windows as icons only (the default; titles show on hover) ---- */
+[data-wins="icons"] .win { flex: none; width: 46px; min-width: 46px; padding: 0; justify-content: center; gap: 0; }
+[data-wins="icons"] .win .title, [data-wins="icons"] .win .num { display: none !important; }
+[data-wins="icons"] .win img, [data-wins="icons"] .win .mono-icon { display: block !important; }
+[data-wins="icons"] .win.active::after { left: 12px; right: 12px; }
+[data-wins="icons"] .wins { gap: 4px; }
+[data-wins="icons"][data-theme="hivis"] .win { flex-direction: row; align-items: center; }
+[data-wins="icons"][data-theme="overclock"] .win { padding: 0; }
+[data-wins="icons"][data-theme="overclock"] .win.active { box-shadow: inset 0 0 0 1px var(--accent), inset 0 -3px 0 var(--accent); }
+[data-wins="icons"][data-theme="skydock"] .win.active::after { left: 12px; right: 12px; width: auto; }
+[data-wins="icons"][data-theme="moonbase"] .win.active::after { left: auto; right: 0; }

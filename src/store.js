@@ -14,6 +14,8 @@ const DEFAULTS = {
   showSeconds: null, // null = whatever the theme does
   clock24: false,
   searchEngine: 'google',
+  winStyle: 'icons', // open windows: 'icons' only, or 'titles' (icon + window title)
+  trayApps: ['command deck.exe'], // apps shown as small tray icons instead of open windows
   weather: { name: 'Los Angeles', region: 'California, US', lat: 34.0522, lon: -118.2437, unit: 'F' },
   pins: null, // filled on first run
   wallpaper: { sig: null, dismissedSig: null, suggestion: null, palette: null, vivid: null }

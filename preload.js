@@ -15,6 +15,7 @@ contextBridge.exposeInMainWorld('tb', {
   // bar
   activate: (hwnd) => ipcRenderer.send('win:activate', hwnd),
   windowMenu: (hwnd) => ipcRenderer.send('win:menu', hwnd),
+  trayAppMenu: (key) => ipcRenderer.send('trayapp:menu', key),
   closeWindow: (hwnd) => ipcRenderer.send('win:close', hwnd),
   launchPin: (i) => ipcRenderer.send('pin:launch', i),
   pinMenu: (i) => ipcRenderer.send('pin:menu', i),

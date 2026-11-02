@@ -52,6 +52,14 @@ function renderWindows() {
   ).join('');
 }
 
+function renderTrayApps() {
+  const list = state.trayApps || [];
+  $('#trayApps').hidden = !list.length;
+  $('#trayApps').innerHTML = list.map((t) =>
+    `<button class="tray-app${t.active ? ' active' : ''}" data-hwnd="${t.hwnd}" data-tray-key="${window.esc(t.key)}" title="${window.esc(t.name)}" aria-label="${window.esc(t.name)}">${iconHtml(t.icon, t.name)}</button>`
+  ).join('');
+}
+
 function renderWeather() {
   const w = state.weather;
   const el = $('#weather');
@@ -102,7 +110,9 @@ function render() {
   if (!state) return;
   applyTheme();
   renderPins();
+  document.documentElement.dataset.wins = state.winStyle === 'titles' ? 'titles' : 'icons';
   renderWindows();
+  renderTrayApps();
   renderWeather();
   renderSuggestion();
   tick();
@@ -129,7 +139,9 @@ document.addEventListener('contextmenu', (e) => {
   e.preventDefault();
   const w = e.target.closest('.win');
   const p = e.target.closest('.pin');
-  if (w) window.tb.windowMenu(Number(w.dataset.hwnd));
+  const ta = e.target.closest('.tray-app');
+  if (ta) window.tb.trayAppMenu(ta.dataset.trayKey);
+  else if (w) window.tb.windowMenu(Number(w.dataset.hwnd));
   else if (p) window.tb.pinMenu(Number(p.dataset.pin));
   else if (!e.target.closest('.search')) window.tb.barMenu();
 });
