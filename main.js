@@ -710,7 +710,12 @@ async function smoke() {
   await check('appbar', () => ({ registered: barRegistered, monitor: monPhys, bar: w32.rect(barHwnd) }));
   await check('windows', () => { pollWindows(); return { raw: w32.listWindows().length, shown: windowsList.length, sample: windowsList.slice(0, 5).map((w) => w.title) }; });
   await check('taskbarState', () => ({ tray: !!w32.trayWindow(), autoHide: w32.taskbarAutoHide() }));
-  await check('searchHost', async () => { await host.request('ping'); const files = await host.files('a').catch((e) => 'index: ' + e.message); return { files: Array.isArray(files) ? files.length : files }; });
+  await check('searchHost', async () => {
+    await host.request('ping');
+    const svc = await host.request('index').catch((e) => [{ service: 'unknown: ' + e.message }]);
+    const tryFiles = async (q) => { const f = await host.files(q).catch((e) => 'index: ' + e.message); return Array.isArray(f) ? f.length : f; };
+    return { windowsSearch: svc[0] && svc[0].service, files_a: await tryFiles('a'), files_windows: await tryFiles('windows') };
+  });
   await check('apps', async () => { const list = await loadApps(); return { count: list.length, sample: list.slice(0, 5).map((a) => a.name) }; });
   await check('search', () => search.buildResults({ query: 'set', apps }).groups.map((g) => g.name));
   await check('wallpaper', () => { const f = wallpaperFile(); return { file: f, info: f ? checkWallpaper({ force: true }) : null }; });

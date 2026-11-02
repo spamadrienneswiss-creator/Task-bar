@@ -34,4 +34,5 @@ A separate Windows 11 app (Electron) that puts a themed taskbar on Nick's **side
 
 ## Where things stand
 - v1.0.0 (Nov 2, 2026): first release, everything above.
+- v1.0.1: file search falls back to a plain name match when the index rejects a word search; smoke test reports the Windows Search service.
 - Parked list: only what Nick parks himself goes here. (Nothing yet.)
