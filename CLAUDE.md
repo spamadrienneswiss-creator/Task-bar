@@ -10,7 +10,7 @@ Read this first in any new thread. It's the handoff, so a fresh session can pick
 
 ## What it is
 A separate Windows 11 app (Electron) that puts a themed taskbar on Nick's **side monitor without changing which monitor is the main display**.
-- Start button (opens an all-apps panel), search box (apps, Windows settings pages, files from the Windows search index, web), pinned apps, open windows (one button each, never combined), weather, Wi-Fi / volume / notifications buttons, clock, show-desktop strip.
+- Start button (opens an all-apps panel), search box (apps, Windows settings pages, files from the Windows search index, web), pinned apps, open windows (icons only by default, one per window), a tray area for apps like Command Deck, weather, Wi-Fi / volume / notifications buttons, clock, show-desktop strip.
 - Seven looks from the Command Deck board: Command (default), Horizon, Hi-Vis, Overclock, Afterhours, Moonbase '79, Skydock.
 - Theme picker in Settings › Theme with **wallpaper match**: when the desktop background changes, the bar reads its colors, ranks the themes and shows a "Use …" chip. Optional **tint**: keep the theme, swap its accent for the wallpaper's most vivid color. Suggest only; nothing changes until he picks.
 - Tucks Windows' own taskbar away (Windows' auto-hide) while running; puts it back on Quit and on uninstall.
@@ -35,4 +35,5 @@ A separate Windows 11 app (Electron) that puts a themed taskbar on Nick's **side
 ## Where things stand
 - v1.0.0 (Nov 2, 2026): first release, everything above.
 - v1.0.1: file search falls back to a plain name match when the index rejects a word search; smoke test reports the Windows Search service.
+- v1.0.2: open windows as icons only (titles on hover; Settings › Bar brings titles back); tray area beside Wi-Fi for apps on the tray list (Command Deck by default; right-click a window › Move to the tray). Windows of the same app aren't grouped.
 - Parked list: only what Nick parks himself goes here. (Nothing yet.)

@@ -1,7 +1,7 @@
 {
   "name": "task-bar",
   "productName": "Task Bar",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A themed Windows 11 taskbar for your side monitor, from the Command Deck family.",
   "main": "main.js",
   "author": "Command Deck",
