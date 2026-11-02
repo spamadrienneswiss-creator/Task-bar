@@ -9,7 +9,7 @@ A themed taskbar for Windows 11 that lives on your **side monitor**, without mak
 - **Seven themes**: Command, Horizon, Hi-Vis, Overclock, Afterhours, Moonbase '79 and Skydock. Change your wallpaper and Task Bar suggests the theme that matches it, or tints the theme's accent to your background.
 
 ## Install
-1. Download **Task-Bar-Setup-x.y.z.exe** from [Releases](https://github.com/spamadrienneswiss-creator/task-bar/releases/latest).
+1. Download **Task-Bar-Setup-x.y.z.exe** from [Releases](https://github.com/spamadrienneswiss-creator/Task-bar/releases/latest).
 2. Windows may say "Windows protected your PC". Click **More info**, then **Run anyway**.
 3. The bar appears on your side monitor. Windows' own taskbar tucks itself away (it still slides up if you push the mouse to the bottom of the main screen).
 

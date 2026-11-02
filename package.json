@@ -62,13 +62,13 @@
       {
         "provider": "github",
         "owner": "spamadrienneswiss-creator",
-        "repo": "task-bar",
+        "repo": "Task-bar",
         "releaseType": "release"
       }
     ]
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/spamadrienneswiss-creator/task-bar.git"
+    "url": "https://github.com/spamadrienneswiss-creator/Task-bar.git"
   }
 }
