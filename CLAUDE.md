@@ -36,4 +36,5 @@ A separate Windows 11 app (Electron) that puts a themed taskbar on Nick's **side
 - v1.0.0 (Nov 2, 2026): first release, everything above.
 - v1.0.1: file search falls back to a plain name match when the index rejects a word search; smoke test reports the Windows Search service.
 - v1.0.2: open windows as icons only (titles on hover; Settings › Bar brings titles back); tray area beside Wi-Fi for apps on the tray list (Command Deck by default; right-click a window › Move to the tray). Windows of the same app aren't grouped.
+- v1.0.3: fixed the bar crashing when a window button was clicked. Cause: window messages (WM_ACTIVATE, the AppBar callback) arrive while a Windows call such as SetForegroundWindow is still running; calling koffi again from inside them crashed. Hooks now defer their work with setImmediate. **Rule: never call into win32 synchronously from a hookWindowMessage callback.** Smoke test now switches to a window and back.
 - Parked list: only what Nick parks himself goes here. (Nothing yet.)

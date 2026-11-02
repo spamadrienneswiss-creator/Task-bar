@@ -254,12 +254,19 @@ function createBar() {
   barHwnd = hwndOf(bar);
   ownHwnds.add(barHwnd);
   if (isWin && w32) {
+    // These messages can arrive while another Windows call is still running (for example while
+    // SetForegroundWindow hands the focus to the clicked window). Calling Windows again from inside
+    // that crashed the app, so the work always waits until the current call has finished.
     bar.hookWindowMessage(CB_MSG, (wParam) => {
       const code = wParam.length >= 4 ? wParam.readUInt32LE(0) : -1;
-      if (code === win32mod.ABN.POSCHANGED) schedulePlace();
-      if (code === win32mod.ABN.FULLSCREENAPP) checkFullscreen();
+      setImmediate(() => {
+        if (code === win32mod.ABN.POSCHANGED) schedulePlace();
+        if (code === win32mod.ABN.FULLSCREENAPP) checkFullscreen();
+      });
     });
-    bar.hookWindowMessage(WM_ACTIVATE, () => { try { w32.appBar(win32mod.ABM.ACTIVATE, { hWnd: barHwnd }); } catch (e) { /* ignore */ } });
+    bar.hookWindowMessage(WM_ACTIVATE, () => {
+      setImmediate(() => { try { if (barRegistered) w32.appBar(win32mod.ABM.ACTIVATE, { hWnd: barHwnd }); } catch (e) { /* ignore */ } });
+    });
   }
   bar.once('ready-to-show', () => { placeBar(); bar.showInactive(); });
   bar.on('closed', () => { bar = null; });
@@ -749,6 +756,25 @@ async function smoke() {
   await check('apps', async () => { const list = await loadApps(); return { count: list.length, sample: list.slice(0, 5).map((a) => a.name) }; });
   await check('search', () => search.buildResults({ query: 'set', apps }).groups.map((g) => g.name));
   await check('wallpaper', () => { const f = wallpaperFile(); return { file: f, info: f ? checkWallpaper({ force: true }) : null }; });
+  await check('activateWindow', async () => {
+    // The click path that once crashed: focus the bar, then hand focus to another window and back.
+    const np = spawn('notepad.exe', [], { detached: true, stdio: 'ignore' });
+    await new Promise((r) => setTimeout(r, 2500));
+    pollWindows();
+    const target = windowsList.find((w) => /notepad/i.test(w.exe)) || windowsList[0];
+    if (!target) return 'no window to switch to';
+    bar.focus();
+    await new Promise((r) => setTimeout(r, 400));
+    ipcMain.emit('win:activate', {}, target.hwnd);
+    await new Promise((r) => setTimeout(r, 800));
+    ipcMain.emit('win:activate', {}, target.hwnd); // clicking the active window minimizes it
+    await new Promise((r) => setTimeout(r, 800));
+    pollWindows();
+    const result = { switchedTo: target.title, minimized: w32.isIconic(target.hwnd), barVisible: w32.isVisible(barHwnd) };
+    try { process.kill(np.pid); } catch (e) { /* closed already */ }
+    if (!result.barVisible) throw new Error('bar hidden after switching windows');
+    return result;
+  });
   await check('renderer', async () => bar.webContents.executeJavaScript('document.querySelectorAll(".pin").length + ":" + document.documentElement.dataset.theme'));
   fs.writeFileSync(smokeFile, JSON.stringify(report, null, 2));
   console.log(JSON.stringify(report, null, 2));
