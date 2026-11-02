@@ -1,0 +1,74 @@
+{
+  "name": "task-bar",
+  "productName": "Task Bar",
+  "version": "1.0.0",
+  "description": "A themed Windows 11 taskbar for your side monitor, from the Command Deck family.",
+  "main": "main.js",
+  "author": "Command Deck",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "test": "node test/run-tests.js",
+    "dist": "electron-builder --win nsis",
+    "shots": "node tools/shots.mjs",
+    "bump": "node scripts/bump.js"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.9",
+    "koffi": "^2.16.3"
+  },
+  "devDependencies": {
+    "electron": "^44.7.0",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "com.commanddeck.taskbar",
+    "productName": "Task Bar",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "shared/**/*",
+      "renderer/**/*",
+      "assets/**/*",
+      "package.json",
+      "!node_modules/koffi/build/koffi/!(win32_x64)/**",
+      "!node_modules/koffi/src/**",
+      "!node_modules/koffi/vendor/**",
+      "!node_modules/koffi/doc/**"
+    ],
+    "asarUnpack": [
+      "node_modules/koffi/**",
+      "src/search-host.ps1"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "Task Bar",
+      "artifactName": "Task-Bar-Setup-${version}.${ext}",
+      "include": "build/installer.nsh",
+      "runAfterFinish": true
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "spamadrienneswiss-creator",
+        "repo": "task-bar",
+        "releaseType": "release"
+      }
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/spamadrienneswiss-creator/task-bar.git"
+  }
+}

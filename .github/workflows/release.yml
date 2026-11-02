@@ -1,0 +1,105 @@
+# Builds and ships a new version whenever main gets a version number that hasn't been released yet
+# (npm run bump -- 1.0.1, commit, push). Every push still runs the tests and a Windows build + smoke test.
+#   1. version: is package.json's version already a release?
+#   2. checks: unit tests on Linux
+#   3. windows: Windows calls check, installer build, a real start-up of the built app (--smoke),
+#      then, for a new version, the GitHub Release that installed copies update from.
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.v.outputs.tag }}
+      new: ${{ steps.v.outputs.new }}
+    steps:
+      - uses: actions/checkout@v5
+      - id: v
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="v$(node -p "require('./package.json').version")"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          done=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json isDraft,assets --jq '(.isDraft | not) and ([.assets[].name] | index("latest.yml") != null)' 2>/dev/null || echo false)
+          if [ "$done" = "true" ]; then echo "new=false" >> "$GITHUB_OUTPUT"; echo "$tag is already released."; else echo "new=true" >> "$GITHUB_OUTPUT"; echo "Releasing $tag."; fi
+
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Unit tests
+        run: node test/run-tests.js
+
+  windows:
+    needs: [version, checks]
+    runs-on: windows-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - name: Windows calls check
+        run: node tools/win-check.js
+      - name: Build the installer
+        shell: bash
+        run: |
+          set -o pipefail
+          if ! npx electron-builder --win nsis --publish never 2>&1 | tee build.log; then
+            msg=$(tail -n 40 build.log | sed 's/\x1b\[[0-9;]*m//g' | sed ':a;N;$!ba;s/%/%25/g;s/\r//g;s/\n/%0A/g')
+            echo "::error title=Installer build failed::$msg"
+            exit 1
+          fi
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - name: Start the built app (smoke test)
+        shell: pwsh
+        run: |
+          $exe = Join-Path $PWD 'release\win-unpacked\Task Bar.exe'
+          $out = Join-Path $PWD 'smoke.json'
+          $p = Start-Process -FilePath $exe -ArgumentList "--smoke=$out" -PassThru
+          if (-not $p.WaitForExit(120000)) { $p.Kill(); throw 'The app did not finish its smoke test in 2 minutes' }
+          if (Test-Path $out) { Get-Content $out } else { throw 'No smoke report was written' }
+          if ($p.ExitCode -ne 0) { throw "Smoke test failed (exit $($p.ExitCode))" }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: smoke-report
+          path: smoke.json
+          if-no-files-found: ignore
+      - name: Publish the release
+        if: needs.version.outputs.new == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ needs.version.outputs.tag }}
+        run: |
+          set -e
+          ls -la release
+          files=(release/*.exe release/*.exe.blockmap release/latest.yml)
+          for f in "${files[@]}"; do [ -f "$f" ] || { echo "::error::Missing $f"; exit 1; }; done
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            git log -1 --pretty=%B > notes.txt
+            gh release create "$TAG" --title "Task Bar $TAG" --notes-file notes.txt --target "$GITHUB_SHA" --draft
+          fi
+          # latest.yml goes up last: installed copies only see the update once everything it points to is there.
+          gh release upload "$TAG" release/*.exe release/*.exe.blockmap --clobber
+          gh release upload "$TAG" release/latest.yml --clobber
+          gh release edit "$TAG" --draft=false --latest

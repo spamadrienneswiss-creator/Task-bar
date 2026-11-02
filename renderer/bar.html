@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" data-theme="command">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self'">
+<title>Task Bar</title>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="themes.css">
+<link rel="stylesheet" href="bar.css">
+</head>
+<body>
+<div class="bar" id="bar">
+  <i class="trim" aria-hidden="true"></i>
+  <i class="rim" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></i>
+  <i class="scan" aria-hidden="true"></i>
+
+  <button class="start" id="start" aria-label="Start: all apps"></button>
+
+  <div class="search" id="searchBox">
+    <span class="search-label" id="searchLabel" aria-hidden="true"></span>
+    <label for="q" class="sr">Search apps, files and settings</label>
+    <input id="q" type="text" autocomplete="off" spellcheck="false">
+  </div>
+
+  <div class="pins" id="pins" role="toolbar" aria-label="Pinned apps"></div>
+  <i class="sep" aria-hidden="true"></i>
+  <div class="wins" id="wins" role="toolbar" aria-label="Open windows"></div>
+
+  <div class="suggest" id="suggest" hidden>
+    <span class="suggest-text" id="suggestText"></span>
+    <button class="suggest-use" id="suggestUse"></button>
+    <button class="suggest-x" id="suggestNo" aria-label="Not now"></button>
+  </div>
+
+  <span class="stencil" aria-hidden="true">TB-01</span>
+  <button class="weather" id="weather" aria-label="Weather" hidden></button>
+
+  <div class="tray">
+    <button class="tray-btn" data-tray="wifi" aria-label="Wi-Fi and network"></button>
+    <button class="tray-btn" data-tray="volume" aria-label="Volume and quick settings"></button>
+    <button class="tray-btn" data-tray="notifications" aria-label="Notifications"></button>
+  </div>
+
+  <button class="clock" id="clock" aria-label="Calendar and notifications">
+    <span class="clock-time" id="clockTime"></span>
+    <span class="clock-date" id="clockDate"></span>
+  </button>
+  <button class="desktop" data-tray="desktop" aria-label="Show desktop"></button>
+</div>
+<script src="icons.js"></script>
+<script src="bar.js"></script>
+</body>
+</html>

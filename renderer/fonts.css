@@ -1,0 +1,19 @@
+/* Theme fonts, bundled with the app (Latin subsets, SIL Open Font License: see fonts/licenses). */
+@font-face { font-family: 'Inter'; src: url('fonts/inter.woff') format('woff'); font-weight: 100 900; font-display: block; }
+@font-face { font-family: 'Chakra Petch'; src: url('fonts/chakra-500.woff') format('woff'); font-weight: 500; font-display: block; }
+@font-face { font-family: 'Chakra Petch'; src: url('fonts/chakra-600.woff') format('woff'); font-weight: 600 700; font-display: block; }
+@font-face { font-family: 'Jura'; src: url('fonts/jura-300.woff2') format('woff2'); font-weight: 300; font-display: block; }
+@font-face { font-family: 'Jura'; src: url('fonts/jura-400.woff2') format('woff2'); font-weight: 400; font-display: block; }
+@font-face { font-family: 'Jura'; src: url('fonts/jura-500.woff2') format('woff2'); font-weight: 500 700; font-display: block; }
+@font-face { font-family: 'IBM Plex Mono'; src: url('fonts/plexmono-400.woff') format('woff'); font-weight: 400; font-display: block; }
+@font-face { font-family: 'IBM Plex Mono'; src: url('fonts/plexmono-500.woff') format('woff'); font-weight: 500 700; font-display: block; }
+@font-face { font-family: 'Anybody'; src: url('fonts/anybody.woff') format('woff'); font-weight: 100 900; font-stretch: 50% 150%; font-display: block; }
+@font-face { font-family: 'Martian Mono'; src: url('fonts/martianmono.woff') format('woff'); font-weight: 100 800; font-stretch: 75% 112.5%; font-display: block; }
+@font-face { font-family: 'Teko'; src: url('fonts/teko.woff') format('woff'); font-weight: 300 700; font-display: block; }
+@font-face { font-family: 'Red Hat Mono'; src: url('fonts/redhatmono.woff') format('woff'); font-weight: 300 700; font-display: block; }
+@font-face { font-family: 'Tilt Neon'; src: url('fonts/tiltneon.woff') format('woff'); font-weight: 400; font-display: block; }
+@font-face { font-family: 'Kode Mono'; src: url('fonts/kodemono.woff') format('woff'); font-weight: 400 700; font-display: block; }
+@font-face { font-family: 'Michroma'; src: url('fonts/michroma.woff') format('woff'); font-weight: 400; font-display: block; }
+@font-face { font-family: 'Quantico'; src: url('fonts/quantico-400.woff') format('woff'); font-weight: 400; font-display: block; }
+@font-face { font-family: 'Quantico'; src: url('fonts/quantico-700.woff') format('woff'); font-weight: 700; font-display: block; }
+@font-face { font-family: 'Azeret Mono'; src: url('fonts/azeretmono.woff') format('woff'); font-weight: 100 900; font-display: block; }

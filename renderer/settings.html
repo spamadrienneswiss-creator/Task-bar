@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en" data-theme="command">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self'">
+<title>Task Bar Settings</title>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="themes.css">
+<link rel="stylesheet" href="settings.css">
+</head>
+<body>
+<div class="page">
+  <header class="top">
+    <div>
+      <div class="kicker">TASK BAR · SETTINGS</div>
+      <h1 id="pageTitle">Theme</h1>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Settings sections">
+      <button role="tab" data-tab="theme" aria-selected="true">Theme</button>
+      <button role="tab" data-tab="pins" aria-selected="false">Pinned apps</button>
+      <button role="tab" data-tab="weather" aria-selected="false">Weather</button>
+      <button role="tab" data-tab="bar" aria-selected="false">Bar</button>
+    </nav>
+  </header>
+
+  <!-- Theme -->
+  <section class="tab" id="tab-theme" role="tabpanel">
+    <div class="card wall" id="wallCard">
+      <div class="wall-thumb" id="wallThumb" role="img" aria-label="Your current wallpaper"></div>
+      <div class="wall-info">
+        <div class="kicker" id="wallKicker">YOUR WALLPAPER</div>
+        <div>Colors pulled from your background:</div>
+        <div class="swatches" id="swatches"></div>
+        <div class="grow"></div>
+        <div class="wall-match">
+          <span class="dim">Best match:</span>
+          <strong id="bestName">—</strong>
+          <span class="grow"></span>
+          <button class="btn primary" id="useBest">Use it</button>
+          <button class="btn" id="rescan">Look again</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="kicker section">ALL THEMES</div>
+    <div class="themes" id="themes"></div>
+
+    <div class="toggles">
+      <button class="toggle" id="tTint" role="switch" aria-checked="false">
+        <span class="sw"><span class="knob"></span></span>
+        <span class="tx"><strong>Tint accent to wallpaper</strong><span class="dim">Keeps the theme, swaps its accent for a color from your background</span></span>
+      </button>
+      <button class="toggle" id="tSuggest" role="switch" aria-checked="true">
+        <span class="sw"><span class="knob"></span></span>
+        <span class="tx"><strong>Suggest when wallpaper changes</strong><span class="dim">Only suggests. Nothing changes until you pick.</span></span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Pinned apps -->
+  <section class="tab" id="tab-pins" role="tabpanel" hidden>
+    <p class="dim lead">These sit next to the search box. You can also right-click any open window on the bar and choose <strong>Pin to the bar</strong>.</p>
+    <div class="list" id="pinList"></div>
+    <button class="btn primary" id="addPin">Add an app…</button>
+  </section>
+
+  <!-- Weather -->
+  <section class="tab" id="tab-weather" role="tabpanel" hidden>
+    <div class="card row-card">
+      <div>
+        <div class="kicker">LOCATION</div>
+        <div class="big" id="placeName">—</div>
+      </div>
+      <div class="seg" role="group" aria-label="Temperature unit">
+        <button data-unit="F">°F</button><button data-unit="C">°C</button>
+      </div>
+    </div>
+    <label class="kicker section" for="placeQ">CHANGE LOCATION</label>
+    <div class="searchrow">
+      <input id="placeQ" type="text" placeholder="City name, e.g. Pasadena" autocomplete="off">
+      <button class="btn primary" id="placeGo">Search</button>
+    </div>
+    <div class="list" id="placeList"></div>
+  </section>
+
+  <!-- Bar -->
+  <section class="tab" id="tab-bar" role="tabpanel" hidden>
+    <div class="kicker section first">MONITOR</div>
+    <div class="list" id="displayList"></div>
+    <div class="kicker section">BEHAVIOR</div>
+    <div class="toggles">
+      <button class="toggle" id="tHide" role="switch" aria-checked="true">
+        <span class="sw"><span class="knob"></span></span>
+        <span class="tx"><strong>Tuck away the Windows taskbar</strong><span class="dim">Turns on Windows' own auto-hide. Put back when you quit or uninstall Task Bar.</span></span>
+      </button>
+      <button class="toggle" id="tStart" role="switch" aria-checked="true">
+        <span class="sw"><span class="knob"></span></span>
+        <span class="tx"><strong>Start with Windows</strong><span class="dim">The bar is there as soon as you sign in.</span></span>
+      </button>
+      <button class="toggle" id="t24" role="switch" aria-checked="false">
+        <span class="sw"><span class="knob"></span></span>
+        <span class="tx"><strong>24-hour clock</strong><span class="dim">14:30 instead of 2:30 PM</span></span>
+      </button>
+    </div>
+    <div class="fields">
+      <label class="field"><span>Clock seconds</span>
+        <select id="seconds"><option value="theme">As the theme does</option><option value="on">Always show</option><option value="off">Never show</option></select>
+      </label>
+      <label class="field"><span>Web searches go to</span><select id="engine"></select></label>
+    </div>
+    <div class="kicker section">ABOUT</div>
+    <div class="card row-card">
+      <div><div class="big" id="version">Task Bar</div><div class="dim" id="updateText">—</div></div>
+      <button class="btn" id="updateBtn">Check for updates</button>
+    </div>
+  </section>
+</div>
+<script src="icons.js"></script>
+<script src="settings.js"></script>
+</body>
+</html>

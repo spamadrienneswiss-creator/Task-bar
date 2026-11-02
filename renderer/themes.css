@@ -1,0 +1,44 @@
+/* Theme colors and type. Shared by the bar, the search panel and settings.
+   A wallpaper tint overrides --accent, --accent-text and --ink from script. */
+:root, [data-theme="command"] {
+  --desk: #0B0E13; --bar: #10151C; --raised: #1E2632; --line: #2A3340;
+  --text: #E6EDF3; --dim: #9AA4AF; --accent: #F2A541; --accent-text: #F2A541; --ink: #0B0E13; --hot: #FF5A4E;
+  --display: 'Chakra Petch', 'Segoe UI', sans-serif; --body: 'Inter', 'Segoe UI', sans-serif; --mono: 'Chakra Petch', 'Segoe UI', sans-serif;
+  --radius: 10px; --track: 0.04em; --label-track: 0.18em; --clock-weight: 600; --clock-size: 20px;
+}
+[data-theme="horizon"] {
+  --desk: #050505; --bar: rgba(14,12,10,0.94); --raised: rgba(242,195,139,0.08); --line: rgba(242,195,139,0.18);
+  --text: #EDE3D6; --bright: #FFF4E3; --dim: #A39482; --accent: #F2C38B; --accent-text: #F2C38B; --ink: #120D08; --hot: #FF8A5C;
+  --display: 'Jura', 'Segoe UI', sans-serif; --body: 'Jura', 'Segoe UI', sans-serif; --mono: 'IBM Plex Mono', Consolas, monospace;
+  --radius: 4px; --label-track: 0.22em; --clock-weight: 300; --clock-size: 24px;
+}
+[data-theme="hivis"] {
+  --desk: #0A0A0B; --bar: #141415; --raised: #1C1C1E; --line: #55554F;
+  --text: #F2F2EC; --dim: #A3A39C; --accent: #C6F432; --accent-text: #C6F432; --ink: #0B0B0C; --hot: #FF3D6E;
+  --display: 'Anybody', 'Segoe UI', sans-serif; --body: 'Martian Mono', Consolas, monospace; --mono: 'Martian Mono', Consolas, monospace;
+  --radius: 0px; --label-track: 0.08em; --clock-weight: 900; --clock-size: 26px;
+}
+[data-theme="overclock"] {
+  --desk: #08090B; --bar: #0E0F12; --raised: #181A1F; --line: #3A3E46;
+  --text: #ECEDEE; --dim: #8E929B; --accent: #F3E600; --accent-text: #F3E600; --ink: #0A0A0A; --hot: #FF2E4D; --ice: #2DE2E6;
+  --display: 'Teko', 'Segoe UI', sans-serif; --body: 'Red Hat Mono', Consolas, monospace; --mono: 'Red Hat Mono', Consolas, monospace;
+  --radius: 0px; --label-track: 0.14em; --clock-weight: 500; --clock-size: 34px;
+}
+[data-theme="afterhours"] {
+  --desk: #150A26; --bar: rgba(28,16,48,0.9); --raised: rgba(255,255,255,0.04); --line: rgba(169,155,196,0.32);
+  --text: #EDE6F7; --dim: #A99BC4; --accent: #46F0FF; --accent-text: #46F0FF; --ink: #0B0716; --hot: #FF5FD7; --accent2: #FF5FD7;
+  --display: 'Tilt Neon', 'Segoe UI', sans-serif; --body: 'Kode Mono', Consolas, monospace; --mono: 'Kode Mono', Consolas, monospace;
+  --radius: 10px; --label-track: 0.16em; --clock-weight: 400; --clock-size: 26px;
+}
+[data-theme="moonbase"] {
+  --desk: #8D939A; --bar: #E4E6E9; --raised: #F7F8F9; --line: #CDD1D6;
+  --text: #1E2227; --dim: #5A616B; --accent: #F05A1A; --accent-text: #B13A0A; --ink: #FFFFFF; --hot: #B13A0A;
+  --display: 'Michroma', 'Segoe UI', sans-serif; --body: 'IBM Plex Mono', Consolas, monospace; --mono: 'IBM Plex Mono', Consolas, monospace;
+  --radius: 10px; --label-track: 0.16em; --clock-weight: 400; --clock-size: 18px;
+}
+[data-theme="skydock"] {
+  --desk: #79AEE0; --bar: #F2F4F7; --raised: #FFFFFF; --line: #BCC5CF;
+  --text: #13233D; --dim: #45556E; --accent: #1FB8F0; --accent-text: #0A6E9C; --ink: #111A2B; --hot: #FF4F86; --sign: #111A2B; --sign-text: #7FDFFF;
+  --display: 'Quantico', 'Segoe UI', sans-serif; --body: 'Quantico', 'Segoe UI', sans-serif; --mono: 'Azeret Mono', Consolas, monospace;
+  --radius: 0px; --label-track: 0.14em; --clock-weight: 700; --clock-size: 24px;
+}
